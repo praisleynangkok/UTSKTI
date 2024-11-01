@@ -1,0 +1,71 @@
+﻿@model SampleSecureWeb.ViewModels.LoginViewModel
+
+<div class="row justify-content-center">
+    <div class="col-lg-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header text-center bg-primary text-white">
+                <h4 class="mb-0">Login</h4>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.Message
+                    </div>
+                }
+                <form asp-action="Login" method="post">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Username" class="font-weight-bold"></label>
+                        <input asp-for="Username" class="form-control" placeholder="Masukkan nama pengguna" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password" class="font-weight-bold"></label>
+                        <div class="input-group">
+                            <input id="password" asp-for="Password" type="password" class="form-control" placeholder="Masukkan kata sandi" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
+                                    <i id="passwordIcon" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="RememberLogin" class="form-check-label">
+                            <input asp-for="RememberLogin" class="form-check-input" />
+                            <strong>Remember Me</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block" value="Login" />
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Belum punya akun? <a asp-controller="Account" asp-action="Register">Daftar di sini</a></p>
+                    <p>Lupa kata sandi? <a asp-controller="Account" asp-action="ChangePassword">Ganti kata sandi</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById("password");
+            var passwordIcon = document.getElementById("passwordIcon");
+            passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+            passwordIcon.classList.toggle("fa-eye"); 
+            passwordIcon.classList.toggle("fa-eye-slash");
+        }
+    </script>
+}

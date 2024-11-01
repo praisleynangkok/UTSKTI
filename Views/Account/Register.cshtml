@@ -1,0 +1,119 @@
+﻿@model SampleSecureWeb.ViewModels.RegistrationViewModel
+
+<div class="row justify-content-center">
+    <div class="col-lg-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header text-center bg-primary text-white">
+                <h4 class="mb-0">Registrasi</h4>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success">
+                        @ViewBag.Message
+                    </div>
+                }
+
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Username" class="font-weight-bold"></label>
+                        <input asp-for="Username" class="form-control" placeholder="Masukkan nama pengguna" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password" class="font-weight-bold"></label>
+                        <div class="input-group">
+                            <input id="password" asp-for="Password" type="password" class="form-control" placeholder="Masukkan kata sandi" oninput="checkPasswordStrength()" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
+                                    <i id="passwordIcon" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <!-- Password Strength Indicator -->
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div id="passwordStrengthBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div id="passwordStrengthText" class="mt-1 text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="font-weight-bold"></label>
+                        <div class="input-group">
+                            <input id="confirmPassword" asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Konfirmasi kata sandi" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="cursor: pointer;" onclick="toggleConfirmPassword()">
+                                    <i id="confirmPasswordIcon" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block" value="Registrasi" />
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Sudah Punya Akun? <a asp-controller="Account" asp-action="Login">Login di sini</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById("password");
+            var passwordIcon = document.getElementById("passwordIcon");
+            passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+            passwordIcon.classList.toggle("fa-eye"); 
+            passwordIcon.classList.toggle("fa-eye-slash");
+        }
+
+        function toggleConfirmPassword() {
+            var confirmPasswordInput = document.getElementById("confirmPassword");
+            var confirmPasswordIcon = document.getElementById("confirmPasswordIcon");
+            confirmPasswordInput.type = confirmPasswordInput.type === "password" ? "text" : "password";
+            confirmPasswordIcon.classList.toggle("fa-eye");
+            confirmPasswordIcon.classList.toggle("fa-eye-slash");
+        }
+
+        function checkPasswordStrength() {
+            var password = document.getElementById("password").value;
+            var strengthBar = document.getElementById("passwordStrengthBar");
+            var strengthText = document.getElementById("passwordStrengthText");
+            var strength = 0;
+
+            if (password.length >= 6) strength += 25;
+            if (password.length >= 10) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+
+            strengthBar.style.width = strength + "%";
+
+            if (strength === 0) {
+                strengthText.textContent = "";
+            } else if (strength < 50) {
+                strengthText.textContent = "Password terlalu lemah.";
+                strengthBar.className = "progress-bar bg-danger";
+            } else if (strength < 75) {
+                strengthText.textContent = "Password cukup kuat.";
+                strengthBar.className = "progress-bar bg-warning";
+            } else {
+                strengthText.textContent = "Password kuat.";
+                strengthBar.className = "progress-bar bg-success";
+            }
+        }
+    </script>
+}

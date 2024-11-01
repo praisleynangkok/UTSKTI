@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Hands On Secure Coding</h1>
+    <p>Secure Coding with ASP.NET MVC</p>
+    <p>Username: @ViewBag.username</p>
+    <ul>Fruits:
+        @if (ViewBag.fruits != null) // Cek apakah ViewBag.fruits tidak null
+        {
+            foreach (var fruit in ViewBag.fruits)
+            {
+                <li>@fruit</li>
+            }
+        }
+        else
+        {
+            <li>No fruits available.</li> // Menangani kasus ketika fruits null
+        }
+    </ul>
+</div>
